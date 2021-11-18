@@ -1,0 +1,49 @@
+name: webviz-plugin-boilerplate
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    # Run CI daily and check that tests are working with latest dependencies
+    - cron: "0 0 * * *"
+
+jobs:
+  webviz-plugin-boilerplate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+
+    steps:
+      - name: 📖 Checkout commit locally
+        uses: actions/checkout@v2
+
+      - name: 🐍 Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 📦 Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install .
+
+      - name: 📦 Install test dependencies
+        run: |
+          pip install .[tests]
+
+      - name: 🧾 List all installed packages
+        run: pip freeze
+
+      - name: 🕵️ Check code style & linting
+        run: |
+          black --check webviz_plugin_boilerplate
+          pylint webviz_plugin_boilerplate
+
+      - name: 🤖 Run tests
+        run: |
+          webviz build ./examples/boilerplate_example.yaml --portable ./some_portable_app
