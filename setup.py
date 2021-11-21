@@ -6,16 +6,14 @@ with open("README.md", "r") as fh:
 TESTS_REQUIRE = ["selenium~=3.141", "pylint", "mock", "black", "bandit"]
 
 setup(
-    name="webviz_plugin_boilerplate",
-    description="Webviz plugin boilerplate with example plugins",
+    name="webviz_wind",
+    description="Webviz plugins for wind",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=["tests"]),
     entry_points={
         "webviz_config_plugins": [
-            "SomeCustomPlugin = webviz_plugin_boilerplate.plugins:SomeCustomPlugin",
-            "SomeOtherCustomPlugin = webviz_plugin_boilerplate.plugins:SomeOtherCustomPlugin",
-            "BestPracticePlugin = webviz_plugin_boilerplate.plugins:BestPracticePlugin",
+            "TurbineModelling = webviz_wind.plugins.turbine_modelling:TurbineModelling",
         ]
     },
     install_requires=[

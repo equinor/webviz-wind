@@ -3,10 +3,10 @@ name: webviz-plugin-boilerplate
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
   schedule:
     # Run CI daily and check that tests are working with latest dependencies
     - cron: "0 0 * * *"
@@ -41,9 +41,9 @@ jobs:
 
       - name: 🕵️ Check code style & linting
         run: |
-          black --check webviz_plugin_boilerplate
-          pylint webviz_plugin_boilerplate
+          black --check webviz_wind
+          pylint webviz_wind
 
       - name: 🤖 Run tests
         run: |
-          webviz build ./examples/boilerplate_example.yaml --portable ./some_portable_app
+          webviz build ./examples/wind_example.yaml --portable ./some_portable_app

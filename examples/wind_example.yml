@@ -1,0 +1,18 @@
+layout:
+  - section: Webviz wind
+    content:
+      - page: Front page
+        icon: home
+        content:
+          - This is a `webviz` instance created from a configuration file.
+          - It includes one very simply plugin from `webviz-wind`, but can also use plugins from other plugin projects.
+
+  - section: Example plugin
+    content:
+      - group: Very simple plugin
+        icon: turbine
+        content:
+          - page: Turbine modelling
+            content:
+              - TurbineModelling:
+                  input_file: ./turbine_simulation_data.csv
