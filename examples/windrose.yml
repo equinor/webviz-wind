@@ -1,0 +1,21 @@
+layout:
+  - section: Webviz wind
+    content:
+    - page: Front page
+      icon: home
+      content:
+        - This is a 'webviz' instance crated from a conficuration file
+        - It includes one simple example
+
+  - section: Example plugin
+    content:
+      - group: Simple test
+        icon: turbine
+        content:
+          - page: Wind rose
+            content:
+              - WindRose:
+                  weibull_input_file: ./weibull_table.csv  
+                  timeseries_input_file: ./timeseries.csv
+                  year: 1999
+                  nof_years: 1

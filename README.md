@@ -4,10 +4,33 @@
 
 ## Install your new Python plugin package
 
+Make sure that you have the right public keys available on github
+
+See some hints here.
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+One way of generating a new public key:
+```bash
+cd                      (go to your private folder on Linux)
+ssh-keygen -t rsa       (a new key is generated and put on .ssh/id_rsa  and .ssh/id_rsa.pub. The latter is the public key)
+```
+
+Add  the public key to your github account:
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+
+Then you are ready to clone:
+
+```bash
+git clone git@github.com:equinor/webviz-wind.git
+```
+
 To install your plugin package in _development mode_, run
 
 ```bash
-cd YOUR_GIT_CLONE_OF_THIS_PROECT
+komodoenv -r stable kevn            (to generate a virtual environment so you can use pip install later)
+source kenv/enable.csh              (now you are ready to install your new webviz plugins)
+
+cd YOUR_GIT_CLONE_OF_THIS_PROJECT
 pip install -e .
 ```
 
