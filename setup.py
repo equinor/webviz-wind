@@ -14,6 +14,8 @@ setup(
     entry_points={
         "webviz_config_plugins": [
             "TurbineModelling = webviz_wind.plugins.turbine_modelling:TurbineModelling",
+            "TurbineModellingBasic = webviz_wind.plugins.basic_turbine_modelling:TurbineModellingBasic",
+            "WindRose = webviz_wind.plugins.wind_rose:WindRose",
         ]
     },
     install_requires=[
