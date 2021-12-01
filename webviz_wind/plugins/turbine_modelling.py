@@ -11,6 +11,7 @@ from webviz_config import WebvizPluginABC
 from webviz_config.webviz_store import webvizstore
 from webviz_config.common_cache import CACHE
 
+
 class TurbineModelling(WebvizPluginABC):
     """Insert documentation of plugin here. Is used automatically by `webviz docs'
     Alternative inputfile to the Basic-version made by Anders.
@@ -20,7 +21,14 @@ class TurbineModelling(WebvizPluginABC):
                           If not set the lowest value is used
     """
 
-    def __init__(self, app, webviz_settings, input_file: Path, filter_col: str = 'REAL', filter_start: any = None) -> None:
+    def __init__(
+        self,
+        app,
+        webviz_settings,
+        input_file: Path,
+        filter_col: str = "REAL",
+        filter_start: any = None,
+    ) -> None:
         super().__init__()
 
         self.theme = webviz_settings.theme
@@ -40,7 +48,9 @@ class TurbineModelling(WebvizPluginABC):
                 else:
                     self.filter_start = filter_start
             else:
-                print(f"The filter_start value {self.filter_start} is not in {filter_col}")
+                print(
+                    f"The filter_start value {self.filter_start} is not in {filter_col}"
+                )
                 raise Exception
         else:
             print(f"The filter_col {filter_col} is not in {self.input_file}")
@@ -59,27 +69,33 @@ class TurbineModelling(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("color"),
-                                        options=[{'label': i, 'value': i} for i in self.columns],
+                                        options=[
+                                            {"label": i, "value": i}
+                                            for i in self.columns
+                                        ],
                                         value="NET",
                                     ),
                                 ],
                             ),
                             wcc.Selectors(
-                               label=f"Filter on {self.filter_column}",
+                                label=f"Filter on {self.filter_column}",
                                 children=[
                                     wcc.Dropdown(
-                                        id=self.uuid('filter_value'),
-                                        options=[{"label": i, "value": i} for i in self.filter],
-                                        value=self.filter_start
-                                   )
-                                ]
+                                        id=self.uuid("filter_value"),
+                                        options=[
+                                            {"label": i, "value": i}
+                                            for i in self.filter
+                                        ],
+                                        value=self.filter_start,
+                                    )
+                                ],
                             ),
                             wcc.Selectors(
-                                label="Plot type for sorted values",                           
+                                label="Plot type for sorted values",
                                 children=[
                                     wcc.RadioItems(
                                         id=self.uuid("radio_button_value"),
-                                        options= [
+                                        options=[
                                             {
                                                 "label": "Dots and lines",
                                                 "value": "Dots",
@@ -89,9 +105,9 @@ class TurbineModelling(WebvizPluginABC):
                                                 "value": "Bars",
                                             },
                                         ],
-                                        value = "Dots"
+                                        value="Dots",
                                     ),
-                                ]
+                                ],
                             ),
                         ],
                     )
@@ -114,9 +130,9 @@ class TurbineModelling(WebvizPluginABC):
                             color="white",
                             children=wcc.Graph(
                                 style={"height": "85vh"},
-                                id = self.uuid("figure2"),
+                                id=self.uuid("figure2"),
                             ),
-                        )
+                        ),
                     ],
                 ),
             ],
@@ -130,13 +146,15 @@ class TurbineModelling(WebvizPluginABC):
             Output(component_id=self.uuid("figure"), component_property="figure"),
             [
                 Input(component_id=self.uuid("color"), component_property="value"),
-                Input(component_id=self.uuid("filter_value"), component_property="value"),
-            ]
+                Input(
+                    component_id=self.uuid("filter_value"), component_property="value"
+                ),
+            ],
         )
         def _update_graph1(color_column, filter_value):
-            #Same scale accross realizations
+            # Same scale accross realizations
             low, high = minmax_dataframe_column(self.dataframe, color_column)
-            #Filter the data, but only if the filter is changed
+            # Filter the data, but only if the filter is changed
             df = filter_dataframe(self.dataframe, self.filter_column, filter_value)
             self.latest_filterval = filter_value
 
@@ -148,21 +166,23 @@ class TurbineModelling(WebvizPluginABC):
                 hover_name="NAME",
                 hover_data=["X", "Y", "GROSS", "NET", "WAKE_LOSS"],
                 text="NAME",
-                #range_color= (low, high)
+                # range_color= (low, high)
             )
             fig.update_traces(textposition="bottom right")
-            fig.update_traces(marker={'size': 15, 'line': {'width': 2, 'color': 'DarkslateGrey'}})
+            fig.update_traces(
+                marker={"size": 15, "line": {"width": 2, "color": "DarkslateGrey"}}
+            )
             fig["layout"].update(self.theme.plotly_theme["layout"])
 
             return fig
 
         @app.callback(
-            Output(self.uuid("figure2"),"figure"),
+            Output(self.uuid("figure2"), "figure"),
             [
                 Input(self.uuid("color"), "value"),
-                Input(self.uuid("filter_value"),"value"),
-                Input(self.uuid("radio_button_value"), "value")
-            ]
+                Input(self.uuid("filter_value"), "value"),
+                Input(self.uuid("radio_button_value"), "value"),
+            ],
         )
         def _update_graph2(color_column, filter_value, plot_type):
             df = filter_dataframe(self.dataframe, self.filter_column, filter_value)
@@ -180,51 +200,42 @@ class TurbineModelling(WebvizPluginABC):
                     hover_name="NAME",
                     hover_data=["GROSS", "NET", "WAKE_LOSS"],
                 )
-                fig.update_traces(marker={'size': 15, 'line': {'width': 2, 'color': 'DarkslateGrey'}})
+                fig.update_traces(
+                    marker={"size": 15, "line": {"width": 2, "color": "DarkslateGrey"}}
+                )
                 for i in range(len(values)):
-                    fig.add_shape(
-                        type="line",
-                        x0=i,
-                        y0=0,
-                        x1=i,
-                        y1=values[i]
-                    )
+                    fig.add_shape(type="line", x0=i, y0=0, x1=i, y1=values[i])
             else:
-                fig = px.bar(df,
+                fig = px.bar(
+                    df,
                     x="NAME",
                     y=color_column,
                     color=color_column,
-                    title="Ranking of turbines"
+                    title="Ranking of turbines",
                 )
             fig["layout"].update(self.theme.plotly_theme["layout"])
-            fig.update_layout(yaxis_range=[low*0.99,high*1.01])
+            fig.update_layout(yaxis_range=[low * 0.99, high * 1.01])
 
             return fig
-
-
-
-
 
 
 @webvizstore
 def get_data(input_file: Path) -> pd.DataFrame:
     return pd.read_csv(input_file)
 
+
 @CACHE.memoize(timeout=CACHE.TIMEOUT)
-def filter_dataframe(
-    df: pd.DataFrame, column: str, filter_value: int
-) -> pd.DataFrame:
+def filter_dataframe(df: pd.DataFrame, column: str, filter_value: int) -> pd.DataFrame:
 
     return df.loc[df[column] == filter_value]
 
+
 @CACHE.memoize(timeout=CACHE.TIMEOUT)
-def minmax_dataframe_column(
-    dframe: pd.DataFrame, column: str
-) -> (float,  float):
-    
+def minmax_dataframe_column(dframe: pd.DataFrame, column: str) -> (float, float):
+
     low = dframe[column].min()
     high = dframe[column].max()
-    if (not isinstance(low, (int, float) )) or (not isinstance(high, (int, float))):
+    if (not isinstance(low, (int, float))) or (not isinstance(high, (int, float))):
         low, high = None, None
- 
+
     return low, high
