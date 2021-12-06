@@ -73,7 +73,7 @@ class TurbineModelling(WebvizPluginABC):
                                             {"label": i, "value": i}
                                             for i in self.columns
                                         ],
-                                        value="NET",
+                                        value="NET_AEP",
                                     ),
                                 ],
                             ),
@@ -164,7 +164,7 @@ class TurbineModelling(WebvizPluginABC):
                 y="Y",
                 color=color_column,
                 hover_name="NAME",
-                hover_data=["X", "Y", "GROSS", "NET", "WAKE_LOSS"],
+                hover_data=["X", "Y", "GROSS_AEP", "NET_AEP", "WAKE_LOSS"],
                 text="NAME",
                 # range_color= (low, high)
             )
@@ -198,7 +198,7 @@ class TurbineModelling(WebvizPluginABC):
                     y=color_column,
                     color=color_column,
                     hover_name="NAME",
-                    hover_data=["GROSS", "NET", "WAKE_LOSS"],
+                    hover_data=["GROSS_AEP", "NET_AEP", "WAKE_LOSS"],
                 )
                 fig.update_traces(
                     marker={"size": 15, "line": {"width": 2, "color": "DarkslateGrey"}}

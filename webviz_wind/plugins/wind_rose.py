@@ -141,7 +141,7 @@ class WindRose(WebvizPluginABC):
                                 label="Wind speed resolution",
                                 children=[
                                     wcc.RadioItems(
-                                        id=self.uuid("radio_button_value"),
+                                        id=self.uuid("resolution_button_value"),
                                         options=[
                                             {
                                                 "label": "0-5-10-15-20-40",
@@ -211,7 +211,7 @@ class WindRose(WebvizPluginABC):
                     component_id=self.uuid("wd_resolution"), component_property="value"
                 ),
                 Input(
-                    component_id=self.uuid("radio_button_value"),
+                    component_id=self.uuid("resolution_button_value"),
                     component_property="value",
                 ),
                 Input(component_id=self.uuid("start_year"), component_property="value"),
@@ -224,7 +224,7 @@ class WindRose(WebvizPluginABC):
                 self.timeseries_df, start_year, nof_years, "year"
             )  # year should be defined in a separate class
             df = wind_rose_from_timeseries(df, delta_wd, intervals)
-
+#            print(df)
             fig = px.bar_polar(
                 df,
                 r="freq",
@@ -262,7 +262,7 @@ class WindRose(WebvizPluginABC):
             ),
             [
                 Input(
-                    component_id=self.uuid("radio_button_value"),
+                    component_id=self.uuid("resolution_button_value"),
                     component_property="value",
                 ),
             ],
