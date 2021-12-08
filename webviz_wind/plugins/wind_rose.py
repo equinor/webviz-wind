@@ -5,6 +5,8 @@ import orjson  # Import manually - bug in Dash  # pylint: disable=unused-import
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from dash.dependencies import Input, Output
 import webviz_core_components as wcc
 from webviz_config import WebvizPluginABC
@@ -185,6 +187,15 @@ class WindRose(WebvizPluginABC):
                                 id=self.uuid("weibull_wind_rose_figure"),
                             ),
                         ),
+                        wcc.Frame(
+                            style={"height": "50vh"},
+                            highlight=False,
+                            color="white",
+                            children=wcc.Graph(
+                                style={"height": "45vh"},
+                                id=self.uuid("weibull_lineplot_figure"),
+                            ),
+                        ),
                         # Just here for demo. Probably not a natural place - unless enhenced.
                         wcc.Frame(
                             style={"height": "65vh"},
@@ -285,6 +296,32 @@ class WindRose(WebvizPluginABC):
             )
 
             fig["layout"].update(self.theme.plotly_theme["layout"])
+            return fig
+
+        #The input is not really used here.
+        @app.callback(
+            Output(
+                component_id=self.uuid("weibull_lineplot_figure"),
+                component_property="figure",
+            ),
+            [
+                Input(
+                    component_id=self.uuid("resolution_button_value"),
+                    component_property="value",
+                ),
+            ],
+
+        )
+        def _update_weibull_lineplot(resolution):
+            df = self.weibull_df.copy()
+            # Create figure with secondary y-axis
+            fig = make_subplots(specs=[[{"secondary_y": True}]])
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['a'], mode='lines', name='A'))
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['k'], mode='lines', name='k'))
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['freq'], mode='lines', name='freq'), secondary_y=True)
+            fig.update_layout(title_text="Weibull input data")
+            # Set x-axis title
+            fig.update_xaxes(title_text="wind direction")
             return fig
 
         @app.callback(
