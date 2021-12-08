@@ -103,6 +103,7 @@ class WindRose(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("start_year"),
+                                        clearable=False,
                                         options=[
                                             {"label": i, "value": i}
                                             for i in self.available_years
@@ -116,6 +117,7 @@ class WindRose(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("nof_years"),
+                                        clearable=False,
                                         options=[
                                             {"label": i, "value": i}
                                             for i in range(1, 5)
@@ -129,6 +131,7 @@ class WindRose(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("wd_resolution"),
+                                        clearable=False,
                                         options=[
                                             {"label": i, "value": i}
                                             for i in [30, 15, 10, 5]

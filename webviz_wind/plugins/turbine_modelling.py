@@ -69,6 +69,7 @@ class TurbineModelling(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("color"),
+                                        clearable=False,
                                         options=[
                                             {"label": i, "value": i}
                                             for i in self.columns
@@ -82,6 +83,7 @@ class TurbineModelling(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("filter_value"),
+                                        clearable=False,
                                         options=[
                                             {"label": i, "value": i}
                                             for i in self.filter
