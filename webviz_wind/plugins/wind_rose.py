@@ -192,7 +192,7 @@ class WindRose(WebvizPluginABC):
                             highlight=False,
                             color="white",
                             children=wcc.Graph(
-                                style={"height": "45vh"},
+                                style={"height": "60vh"},
                                 id=self.uuid("weibull_lineplot_figure"),
                             ),
                         ),
@@ -314,14 +314,14 @@ class WindRose(WebvizPluginABC):
         )
         def _update_weibull_lineplot(resolution):
             df = self.weibull_df.copy()
+            fig = make_subplots(rows=3, cols=1)
             # Create figure with secondary y-axis
-            fig = make_subplots(specs=[[{"secondary_y": True}]])
-            fig.add_trace(go.Scatter(x=df['wd'], y=df['a'], mode='lines', name='A'))
-            fig.add_trace(go.Scatter(x=df['wd'], y=df['k'], mode='lines', name='k'))
-            fig.add_trace(go.Scatter(x=df['wd'], y=df['freq'], mode='lines', name='freq'), secondary_y=True)
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['a'], mode='lines', name='A'), row=1, col=1)
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['k'], mode='lines', name='k'), row=2, col=1)
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['freq'], mode='lines', name='freq'), row=3, col=1)
             fig.update_layout(title_text="Weibull input data")
             # Set x-axis title
-            fig.update_xaxes(title_text="wind direction")
+            fig.update_xaxes(title_text="wind direction", row=3, col=1)
             return fig
 
         @app.callback(
