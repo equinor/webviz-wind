@@ -5,6 +5,8 @@ import orjson  # Import manually - bug in Dash  # pylint: disable=unused-import
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from dash.dependencies import Input, Output
 import webviz_core_components as wcc
 from webviz_config import WebvizPluginABC
@@ -103,6 +105,7 @@ class WindRose(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("start_year"),
+                                        clearable=False,
                                         options=[
                                             {"label": i, "value": i}
                                             for i in self.available_years
@@ -116,6 +119,7 @@ class WindRose(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("nof_years"),
+                                        clearable=False,
                                         options=[
                                             {"label": i, "value": i}
                                             for i in range(1, 5)
@@ -129,6 +133,7 @@ class WindRose(WebvizPluginABC):
                                 children=[
                                     wcc.Dropdown(
                                         id=self.uuid("wd_resolution"),
+                                        clearable=False,
                                         options=[
                                             {"label": i, "value": i}
                                             for i in [30, 15, 10, 5]
@@ -141,7 +146,7 @@ class WindRose(WebvizPluginABC):
                                 label="Wind speed resolution",
                                 children=[
                                     wcc.RadioItems(
-                                        id=self.uuid("radio_button_value"),
+                                        id=self.uuid("resolution_button_value"),
                                         options=[
                                             {
                                                 "label": "0-5-10-15-20-40",
@@ -182,6 +187,15 @@ class WindRose(WebvizPluginABC):
                                 id=self.uuid("weibull_wind_rose_figure"),
                             ),
                         ),
+                        wcc.Frame(
+                            style={"height": "50vh"},
+                            highlight=False,
+                            color="white",
+                            children=wcc.Graph(
+                                style={"height": "60vh"},
+                                id=self.uuid("weibull_lineplot_figure"),
+                            ),
+                        ),
                         # Just here for demo. Probably not a natural place - unless enhenced.
                         wcc.Frame(
                             style={"height": "65vh"},
@@ -211,7 +225,7 @@ class WindRose(WebvizPluginABC):
                     component_id=self.uuid("wd_resolution"), component_property="value"
                 ),
                 Input(
-                    component_id=self.uuid("radio_button_value"),
+                    component_id=self.uuid("resolution_button_value"),
                     component_property="value",
                 ),
                 Input(component_id=self.uuid("start_year"), component_property="value"),
@@ -224,7 +238,7 @@ class WindRose(WebvizPluginABC):
                 self.timeseries_df, start_year, nof_years, "year"
             )  # year should be defined in a separate class
             df = wind_rose_from_timeseries(df, delta_wd, intervals)
-
+#            print(df)
             fig = px.bar_polar(
                 df,
                 r="freq",
@@ -262,7 +276,7 @@ class WindRose(WebvizPluginABC):
             ),
             [
                 Input(
-                    component_id=self.uuid("radio_button_value"),
+                    component_id=self.uuid("resolution_button_value"),
                     component_property="value",
                 ),
             ],
@@ -282,6 +296,32 @@ class WindRose(WebvizPluginABC):
             )
 
             fig["layout"].update(self.theme.plotly_theme["layout"])
+            return fig
+
+        #The input is not really used here.
+        @app.callback(
+            Output(
+                component_id=self.uuid("weibull_lineplot_figure"),
+                component_property="figure",
+            ),
+            [
+                Input(
+                    component_id=self.uuid("resolution_button_value"),
+                    component_property="value",
+                ),
+            ],
+
+        )
+        def _update_weibull_lineplot(resolution):
+            df = self.weibull_df.copy()
+            fig = make_subplots(rows=3, cols=1)
+            # Create figure with secondary y-axis
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['a'], mode='lines', name='A'), row=1, col=1)
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['k'], mode='lines', name='k'), row=2, col=1)
+            fig.add_trace(go.Scatter(x=df['wd'], y=df['freq'], mode='lines', name='freq'), row=3, col=1)
+            fig.update_layout(title_text="Weibull input data")
+            # Set x-axis title
+            fig.update_xaxes(title_text="wind direction", row=3, col=1)
             return fig
 
         @app.callback(

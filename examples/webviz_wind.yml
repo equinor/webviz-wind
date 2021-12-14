@@ -1,0 +1,29 @@
+layout:
+  - section: Webviz wind
+    content:
+    - page: Front page
+      icon: home
+      content:
+        - This is a 'webviz' instance created from a configuration file
+        - It includes two simple examples
+        - Viewing each turbine;  Position, AEP, WAKE LOSS  and more
+        - Analyzing wind roses;  Generated from time series and from a weibull table.
+
+  - section: Example plugin
+    content:
+      - group: Simple tests
+        icon: turbine
+        content:
+          - page: Turbine modelling
+            content:
+              - TurbineModelling:
+                  input_file: ./large_turbine_simulation_data.csv
+          - page: Wind rose
+            content:
+              - WindRose:
+                  weibull_input_file: ./weibull_table.csv  
+                  timeseries_input_file: ./timeseries.csv
+                  year: 1999
+                  nof_years: 1
+                  
+                  
